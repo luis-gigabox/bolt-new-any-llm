@@ -16,11 +16,12 @@ import type { HeadersFunction } from "@remix-run/node";
 
 export const headers: HeadersFunction = () => {
   return {
-    "Cross-Origin-Embedder-Policy": "require-corp",
-    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Embedder-Policy": "credentialless",
+    "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
     "Cross-Origin-Resource-Policy": "cross-origin",
   };
 };
+
 export const links: LinksFunction = () => [
   {
     rel: 'icon',
