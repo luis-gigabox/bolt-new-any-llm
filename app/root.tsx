@@ -20,14 +20,19 @@ export const headers: HeadersFunction = () => {
     "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
     "Cross-Origin-Resource-Policy": "cross-origin",
     "Content-Security-Policy": `
-      default-src 'self' 'unsafe-inline' 'unsafe-eval';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval';
-      connect-src 'self' http://localhost:* ws://localhost:* https://*.stackblitz.com;
-      frame-src 'self' https://*.stackblitz.com;
-      img-src 'self' data: blob: https:;
-      style-src 'self' 'unsafe-inline';
-      font-src 'self' data:;
+      default-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.stackblitz.com;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.stackblitz.com;
+      connect-src 'self' http://localhost:* http://localhost:11434 ws://localhost:* https://*.stackblitz.com;
+      frame-src 'self' https://*.stackblitz.com https://stackblitz.com;
+      style-src 'self' 'unsafe-inline' https://*.stackblitz.com;
+      img-src 'self' data: blob: https: https://*.stackblitz.com;
+      font-src 'self' data: https://*.stackblitz.com;
+      worker-src 'self' blob: https://*.stackblitz.com;
+      child-src 'self' blob: https://*.stackblitz.com;
     `.replace(/\s+/g, ' ').trim(),
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
 };
 
