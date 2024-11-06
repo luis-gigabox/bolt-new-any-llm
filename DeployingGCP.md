@@ -19,7 +19,7 @@
      --image-family=ubuntu-2204-lts \
      --image-project=ubuntu-os-cloud \
      --tags=http-server,https-server \
-     --boot-disk-size=20GB
+     --boot-disk-size=200GB
    ```
 
 2. Create firewall rules for HTTP/HTTPS:
@@ -32,12 +32,58 @@
      --allow tcp:443 \
      --target-tags https-server
    ```
+### Assigning a Static IP Address
 
+1. Using gcloud CLI:
+   ```bash
+   # Create a static IP address
+   gcloud compute addresses create bolt-static-ip \
+     --region=us-central1 \
+     --network-tier=PREMIUM
+
+   # Verify the static IP was created and note the address
+   gcloud compute addresses list
+
+   # Assign the static IP to your instance
+   gcloud compute instances delete-access-config bolt-new-instance \
+     --access-config-name="external-nat" \
+     --zone=us-central1-a
+
+   gcloud compute instances add-access-config bolt-new-instance \
+     --access-config-name="external-nat" \
+     --address=STATIC_IP_ADDRESS \
+     --zone=us-central1-a
+   
+   gcloud compute instances add-access-config bolt-new-instance \
+  --zone=us-central1-a \
+  --access-config-name="external-nat" \
+  --address=34.69.200.189  # Replace with your actual static IP
+   
+   ```
 ### 3. Configure the VM
 1. SSH into your instance:
    ```bash
    gcloud compute ssh bolt-new-instance --zone=us-central1-a
    ```
+```
+# 1. First, clean up any existing Node.js installations
+sudo apt-get remove nodejs npm -y
+sudo apt-get purge nodejs npm -y
+sudo apt-get autoremove -y
+
+# 2. Clean the apt cache
+sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get clean
+sudo apt-get update
+
+# 3. Remove problematic files
+sudo rm /var/cache/apt/archives/nodejs_18.20.*
+sudo rm /usr/share/systemtap/tapset/node.stp
+
+# 4. Now try installing Node.js 18 again
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+```
 
 2. Install required software:
    ```bash
@@ -45,11 +91,12 @@
    sudo apt update && sudo apt upgrade -y
 
    # Install Node.js and npm
-   # curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
    sudo apt install -y nodejs
 
+
    #Install npm
-   sudo apt install -y npm
+   #sudo apt install -y npm
 
    # Install pnpm
    sudo npm install -g pnpm
@@ -155,6 +202,8 @@
 
 3. Enable the site:
    ```bash
+   curl -s ifconfig.me
+   sudo rm /etc/nginx/sites-enabled/default
    sudo ln -s /etc/nginx/sites-available/bolt-new /etc/nginx/sites-enabled/
    sudo nginx -t  # Test configuration
    sudo systemctl restart nginx
