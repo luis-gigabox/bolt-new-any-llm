@@ -19,6 +19,15 @@ export const headers: HeadersFunction = () => {
     "Cross-Origin-Embedder-Policy": "credentialless",
     "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
     "Cross-Origin-Resource-Policy": "cross-origin",
+    "Content-Security-Policy": `
+      default-src 'self' 'unsafe-inline' 'unsafe-eval';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      connect-src 'self' http://localhost:* ws://localhost:* https://*.stackblitz.com;
+      frame-src 'self' https://*.stackblitz.com;
+      img-src 'self' data: blob: https:;
+      style-src 'self' 'unsafe-inline';
+      font-src 'self' data:;
+    `.replace(/\s+/g, ' ').trim(),
   };
 };
 
