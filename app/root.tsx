@@ -12,26 +12,7 @@ import globalStyles from './styles/index.scss?url';
 import xtermStyles from '@xterm/xterm/css/xterm.css?url';
 
 import 'virtual:uno.css';
-import type { HeadersFunction } from "@remix-run/node";
 
-export const headers: HeadersFunction = () => {
-  return {
-    "Cross-Origin-Embedder-Policy": "credentialless",
-    "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
-    "Cross-Origin-Resource-Policy": "cross-origin",
-    
-    // Most permissive CSP for development
-    "Content-Security-Policy": `
-      default-src * 'unsafe-inline' 'unsafe-eval';
-      connect-src * 'unsafe-inline' 'unsafe-eval';
-      frame-src *;
-    `.replace(/\s+/g, ' ').trim(),
-
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "*",
-    "Access-Control-Allow-Headers": "*",
-  };
-};
 
 export const links: LinksFunction = () => [
   {
